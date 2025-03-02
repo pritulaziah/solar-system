@@ -21,5 +21,5 @@ void main() {
     vec3 modelNormal = (world * vec4(normal, 0.0)).xyz;
 
     vNormal = modelNormal;
-    vUv = uv;
+    vUv = vec2(1.0 - uv.x, 1.0 - uv.y);
 }

@@ -40,7 +40,7 @@ class App {
       Math.PI / 2,
       Math.PI / 2,
       15,
-      new Vector3(0, 0, 0),
+      Vector3.Zero(),
       scene
     );
     camera.wheelDeltaPercentage = 0.05;
