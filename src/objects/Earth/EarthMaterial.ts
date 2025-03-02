@@ -1,10 +1,12 @@
-import { ShaderMaterial, Scene, Texture, Effect } from "@babylonjs/core";
+import { ShaderMaterial, Scene, Texture, Effect, Vector3 } from "@babylonjs/core";
 
 import dayTexture from "./textures/8k_earth_daymap.jpg";
 import nightTexture from "./textures/8k_earth_nightmap.jpg";
 
 import earthFragmentShader from "./shaders/fragment.glsl";
 import earthVertexShader from "./shaders/vertex.glsl";
+
+import { GlobalUniforms } from "@core/GlobalUniforms";
 
 const shaderName = "earthMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = earthFragmentShader;
@@ -21,11 +23,17 @@ export class EarthMaterial extends ShaderMaterial {
         "projection",
         "worldViewProjection",
       ],
+      uniformBuffers: ["myGlobal"],
       needAlphaBlending: true,
       needAlphaTesting: true,
     });
 
+    this.setUniformBuffer("myGlobal", GlobalUniforms.getInstance(scene.getEngine()).ubo);
     this.setTexture("dayTexture", new Texture(dayTexture, scene));
     this.setTexture("nightTexture", new Texture(nightTexture, scene));
+  }
+
+  update(earthPosition: Vector3) {
+    this.setVector3('earthPosition', earthPosition);
   }
 }

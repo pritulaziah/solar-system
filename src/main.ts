@@ -2,12 +2,16 @@ import "./style.css";
 import { ArcRotateCamera, Vector3, Engine, Scene, Color4 } from "@babylonjs/core";
 import { Earth } from "./objects/Earth";
 import { Sun } from "./objects/Sun";
+import { GlobalUniforms } from "@core/GlobalUniforms";
 
 class App {
   engine: Engine;
   scene: Scene;
+  globalUniforms: GlobalUniforms;
 
   sizes = { width: window.innerWidth, height: window.innerHeight };
+
+  elapsedSeconds = 0;
 
   params = {
     backgroundColor: "#1d1f2a",
@@ -57,13 +61,17 @@ class App {
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     const camera = App.createCamera(this.scene);
     camera.attachControl(canvas, true);
+    this.globalUniforms = GlobalUniforms.getInstance(this.engine);
   }
 
   async init() {
-    new Sun(this.scene);
-    new Earth(this.scene, App.earthPosition);
+    const sun = new Sun(this.scene);
+    const earth = new Earth(this.scene, App.earthPosition);
 
     this.engine.runRenderLoop(() => {
+      this.elapsedSeconds += this.engine.getDeltaTime() * 0.001;
+      this.globalUniforms.update(this.elapsedSeconds, sun.mesh.position);
+      earth.update();
       this.scene.render();
     });
 

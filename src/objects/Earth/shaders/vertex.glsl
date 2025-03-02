@@ -8,7 +8,6 @@ uniform mat4 world;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 worldViewProjection;
-uniform float time;
 
 varying vec3 vNormal;
 // varying vec3 vPosition;
