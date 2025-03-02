@@ -1,13 +1,15 @@
-import { Scene, CreateSphere, Mesh } from "@babylonjs/core";
+import { Scene, CreateSphere, Mesh, Vector3 } from "@babylonjs/core";
 import { EarthMaterial } from "./EarthMaterial";
 
 export class Earth {
-  earth: Mesh;
+  mesh: Mesh;
 
-  constructor(scene: Scene) {
-    this.earth = CreateSphere("earth", { diameter: 2, segments: 64 }, scene);
-    this.earth.material = new EarthMaterial(scene);
-    this.earth.rotation.y = Math.PI / 4;
+  constructor(scene: Scene, position: Vector3) {
+    const earth = CreateSphere("earth", { diameter: 1, segments: 64 }, scene);
+    earth.material = new EarthMaterial(scene);
+    earth.rotation.y = Math.PI / 4;
+    earth.position = position;
+    this.mesh = earth;
   }
 
   update() {}

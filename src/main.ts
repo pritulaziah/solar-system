@@ -1,6 +1,7 @@
 import "./style.css";
 import { ArcRotateCamera, Vector3, Engine, Scene, Color4 } from "@babylonjs/core";
 import { Earth } from "./objects/Earth";
+import { Sun } from "./objects/Sun";
 
 class App {
   engine: Engine;
@@ -12,6 +13,8 @@ class App {
     backgroundColor: "#1d1f2a",
     color: "#ff0000",
   };
+
+  static earthPosition = new Vector3(100, 0, 0);
 
   static createEngine(canvas: HTMLCanvasElement): Engine {
     const engine = new Engine(canvas, true, {
@@ -37,15 +40,15 @@ class App {
   static createCamera(scene: Scene): ArcRotateCamera {
     const camera = new ArcRotateCamera(
       "arcCamera",
-      Math.PI / 2,
-      Math.PI / 2,
-      15,
-      Vector3.Zero(),
+      Math.PI / 4,
+      Math.PI / 4,
+      10,
+      App.earthPosition,
       scene
     );
     camera.wheelDeltaPercentage = 0.05;
     camera.minZ = 0.1; // Prevent camera from zooming inside the Earth
-    camera.lowerRadiusLimit = 1.5;
+    camera.lowerRadiusLimit = 1;
     return camera;
   }
 
@@ -57,7 +60,8 @@ class App {
   }
 
   async init() {
-    new Earth(this.scene);
+    new Sun(this.scene);
+    new Earth(this.scene, App.earthPosition);
 
     this.engine.runRenderLoop(() => {
       this.scene.render();
