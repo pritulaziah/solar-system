@@ -43,13 +43,13 @@ class App {
       new Vector3(0, 0, 0),
       scene
     );
-    camera.wheelDeltaPercentage = 0.01;
-
+    camera.wheelDeltaPercentage = 0.05;
+    camera.minZ = 0.1; // Prevent camera from zooming inside the Earth
+    camera.lowerRadiusLimit = 1.5;
     return camera;
   }
 
-  constructor() {
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  constructor(canvas: HTMLCanvasElement) {
     this.engine = App.createEngine(canvas);
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     const camera = App.createCamera(this.scene);
@@ -67,6 +67,7 @@ class App {
   }
 }
 
-const app = new App();
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+const app = new App(canvas);
 
 app.init();
