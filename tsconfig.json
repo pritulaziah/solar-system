@@ -23,6 +23,7 @@
     "baseUrl": ".",
     "paths": {
       "@core/*": ["src/core/*"],
+      "@objects/*": ["src/objects/*"],
     }
   },
   "include": ["src"]

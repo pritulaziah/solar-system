@@ -5,10 +5,10 @@ export class Sun {
   mesh: Mesh;
 
   constructor(scene: Scene) {
-    const sun = CreateSphere("sun", { diameter: 109, segments: 64 }, scene);
-    sun.material = new SunMaterial(scene);
-    sun.position = Vector3.Zero();
-    this.mesh = sun;
+    const mesh = CreateSphere("sun", { diameter: 109, segments: 64 }, scene);
+    mesh.material = new SunMaterial(scene);
+    mesh.position = Vector3.Zero();
+    this.mesh = mesh;
   }
 
   update() {}
