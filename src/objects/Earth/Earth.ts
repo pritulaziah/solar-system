@@ -10,41 +10,34 @@ import {
 } from "@babylonjs/core";
 import { EarthMaterial } from "./EarthMaterial";
 
-export type EarthParams = {
-  orbitSpeed: number;
-};
-
 export class Earth {
-  private static readonly SEMI_MAJOR_AXIS = 100;
+  private static readonly SEMI_MAJOR_AXIS = 500;
   private static readonly ECCENTRICITY = 0.0167;
   private static readonly INCLINATION = 7 * (Math.PI / 180);
-  private static readonly SEMI_MINOR_AXIS = Earth.SEMI_MAJOR_AXIS * Math.sqrt(1 - Earth.ECCENTRICITY ** 2);
+  private static readonly SEMI_MINOR_AXIS =
+    Earth.SEMI_MAJOR_AXIS * Math.sqrt(1 - Earth.ECCENTRICITY ** 2);
+  private static readonly DIAMETER = 1;
+  private static readonly ORBIT_SPEED = 0.01;
 
   mesh: Mesh;
-  orbitSpeed: number;
   orbitPath: LinesMesh;
   orbitNode: TransformNode;
 
-  constructor(scene: Scene, params: EarthParams) {
-    const { orbitSpeed } = params;
-    this.orbitSpeed = orbitSpeed;
-
+  constructor(scene: Scene) {
     const orbitNode = Earth.createOrbitNode(scene);
     this.orbitNode = orbitNode;
-    const mesh = Earth.createEarthMesh(scene);
+    const mesh = Earth.createMesh(scene);
     mesh.parent = orbitNode;
     this.mesh = mesh;
     this.orbitPath = Earth.createOrbitPath(scene);
   }
 
   update(elapsedSeconds: number) {
-    const theta = elapsedSeconds * this.orbitSpeed;
+    const theta = elapsedSeconds * Earth.ORBIT_SPEED;
     const x = Earth.SEMI_MAJOR_AXIS * Math.cos(theta);
     const z = Earth.SEMI_MINOR_AXIS * Math.sin(theta);
     const y = Math.sin(Earth.INCLINATION) * z;
-
     this.mesh.position.set(x, y, z);
-
     (this.mesh.material as EarthMaterial).update(this.mesh.absolutePosition);
   }
 
@@ -74,8 +67,8 @@ export class Earth {
     return orbitPath;
   }
 
-  private static createEarthMesh(scene: Scene) {
-    const earth = CreateSphere("earth", { diameter: 1, segments: 64 }, scene);
+  private static createMesh(scene: Scene) {
+    const earth = CreateSphere("earth", { diameter: Earth.DIAMETER, segments: 64 }, scene);
     earth.rotation.y = Math.PI / 4;
     const earthMaterial = new EarthMaterial(scene);
     earth.material = earthMaterial;

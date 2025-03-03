@@ -3,14 +3,14 @@ import { ShaderMaterial, Scene, Texture, Effect, Vector3 } from "@babylonjs/core
 import dayTexture from "./textures/8k_earth_daymap.jpg";
 import nightTexture from "./textures/8k_earth_nightmap.jpg";
 
-import earthFragmentShader from "./shaders/fragment.glsl";
-import earthVertexShader from "./shaders/vertex.glsl";
+import fragmentShader from "./shaders/fragment.glsl";
+import vertexShader from "./shaders/vertex.glsl";
 
 import { GlobalUniforms } from "@core/GlobalUniforms";
 
 const shaderName = "earthMaterial";
-Effect.ShadersStore[`${shaderName}FragmentShader`] = earthFragmentShader;
-Effect.ShadersStore[`${shaderName}VertexShader`] = earthVertexShader;
+Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
+Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
 export class EarthMaterial extends ShaderMaterial {
   constructor(scene: Scene) {

@@ -5,8 +5,9 @@ import {
   Scene,
   Color4,
 } from "@babylonjs/core";
-import { Earth } from "./objects/Earth";
-import { Sun } from "./objects/Sun";
+import { Earth } from "@objects/Earth";
+import { Sun } from "@objects/Sun";
+import { Mercury } from "@objects/Mercury";
 import { GlobalUniforms } from "@core/GlobalUniforms";
 
 class App {
@@ -45,7 +46,8 @@ class App {
 
   async init() {
     const sun = new Sun(this.scene);
-    const earth = new Earth(this.scene, { orbitSpeed: 0.01 });
+    const earth = new Earth(this.scene);
+    const mercury = new Mercury(this.scene);
 
     // Camera
     const camera = new ArcRotateCamera(
@@ -53,11 +55,11 @@ class App {
       Math.PI / 4,
       Math.PI / 4,
       10,
-      earth.mesh.absolutePosition,
+      earth.mesh.position,
       this.scene
     );
     camera.wheelDeltaPercentage = 0.05;
-    camera.minZ = 0.1; // Prevent camera from zooming inside the Earth
+    camera.minZ = 0.1;
     camera.lowerRadiusLimit = 1;
     camera.attachControl(canvas, true);
 
@@ -70,8 +72,9 @@ class App {
 
       this.globalUniforms.update(elapsedSeconds, sun.mesh.position);
       earth.update(elapsedSeconds);
+      mercury.update(elapsedSeconds);
 
-      camera.target.copyFrom(earth.mesh.absolutePosition);
+      camera.target.copyFrom(earth.mesh.position);
       this.scene.render();
     });
 

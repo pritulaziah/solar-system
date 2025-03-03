@@ -2,12 +2,12 @@ import { ShaderMaterial, Scene, Texture, Effect } from "@babylonjs/core";
 
 import sunTexture from "./textures/8k_sun.jpg";
 
-import earthFragmentShader from "./shaders/fragment.glsl";
-import earthVertexShader from "./shaders/vertex.glsl";
+import fragmentShader from "./shaders/fragment.glsl";
+import vertexShader from "./shaders/vertex.glsl";
 
 const shaderName = "sunMaterial";
-Effect.ShadersStore[`${shaderName}FragmentShader`] = earthFragmentShader;
-Effect.ShadersStore[`${shaderName}VertexShader`] = earthVertexShader;
+Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
+Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
 export class SunMaterial extends ShaderMaterial {
   constructor(scene: Scene) {
