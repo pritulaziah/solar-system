@@ -10,12 +10,12 @@ import {
 } from "@babylonjs/core";
 
 export type PlanetParams = {
-  orbitColor: Color3;
   semiMajorAxis: number;
   eccentricity: number;
   inclination: number;
   diameter: number;
   orbitSpeed: number;
+  orbitColor: Color3;
 };
 
 export abstract class Planet {

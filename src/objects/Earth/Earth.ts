@@ -1,17 +1,10 @@
-import { Scene, Color3 } from "@babylonjs/core";
+import { Scene } from "@babylonjs/core";
 import { EarthMaterial } from "./EarthMaterial";
-import { Planet } from "../Planet";
+import { Planet, PlanetParams } from "../Planet";
 
 export class Earth extends Planet {
-  constructor(scene: Scene) {
-    super(scene, "earth", {
-      semiMajorAxis: 500,
-      eccentricity: 0.0167,
-      inclination: 0,
-      diameter: 1,
-      orbitSpeed: 0.01,
-      orbitColor: new Color3(0, 1, 0),
-    });
+  constructor(scene: Scene, params: PlanetParams) {
+    super(scene, "earth", params);
     this.mesh.material = new EarthMaterial(scene);
   }
 
