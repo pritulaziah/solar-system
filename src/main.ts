@@ -1,15 +1,13 @@
 import "./style.css";
 import { ArcRotateCamera, Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
-import { Earth } from "@objects/Earth";
-import { Sun } from "@objects/Sun";
-import { Mercury } from "@objects/Mercury";
-import { Venus } from "@objects/Venus";
+import { SolarSystem } from "@objects/SolarSystem";
 
 class App {
   engine: Engine;
   scene: Scene;
   globalUniforms: GlobalUniforms;
+  solarSystem: SolarSystem;
   sizes = { width: window.innerWidth, height: window.innerHeight };
   params = {
     backgroundColor: "#1d1f2a",
@@ -38,21 +36,17 @@ class App {
     this.engine = App.createEngine(canvas);
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
+    this.solarSystem = new SolarSystem(this.scene);
   }
 
   async init() {
-    const sun = new Sun(this.scene);
-    const earth = new Earth(this.scene);
-    const mercury = new Mercury(this.scene);
-    const venus = new Venus(this.scene);
-
     // Camera
     const camera = new ArcRotateCamera(
       "arcCamera",
       Math.PI / 4,
       Math.PI / 4,
       10,
-      earth.mesh.position,
+      this.solarSystem.earth.mesh.position,
       this.scene
     );
     camera.wheelDeltaPercentage = 0.05;
@@ -66,14 +60,10 @@ class App {
     this.engine.runRenderLoop(() => {
       const deltaTime = this.engine.getDeltaTime() * 0.001;
       elapsedSeconds += deltaTime;
-
-      this.globalUniforms.update(elapsedSeconds, sun.mesh.position);
-      // Planets
-      earth.update(elapsedSeconds);
-      mercury.update(elapsedSeconds);
-      venus.update(elapsedSeconds);
+      this.globalUniforms.update(elapsedSeconds, this.solarSystem.sun.mesh.position);
+      this.solarSystem.update(elapsedSeconds);
       // Camera
-      camera.target.copyFrom(earth.mesh.position);
+      camera.target.copyFrom(this.solarSystem.earth.mesh.position);
       this.scene.render();
     });
 

@@ -13,5 +13,5 @@ export class Sun {
     this.mesh = mesh;
   }
 
-  update() {}
+  update(_: number) {}
 }
