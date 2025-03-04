@@ -1,6 +1,7 @@
 import "./style.css";
-import { ArcRotateCamera, Engine, Scene, Color4 } from "@babylonjs/core";
+import { Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
+import { CameraController} from "@core/CameraController";
 import { SolarSystem } from "@objects/SolarSystem";
 
 class App {
@@ -8,7 +9,7 @@ class App {
   scene: Scene;
   globalUniforms: GlobalUniforms;
   solarSystem: SolarSystem;
-  sizes = { width: window.innerWidth, height: window.innerHeight };
+  cameraController: CameraController;
   params = {
     backgroundColor: "#1d1f2a",
     color: "#ff0000",
@@ -37,33 +38,23 @@ class App {
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
     this.solarSystem = new SolarSystem(this.scene);
+    this.cameraController = new CameraController(this.scene, this.solarSystem.earth);
+    this.cameraController.attachToCanvas(canvas);
   }
 
   async init() {
-    // Camera
-    const camera = new ArcRotateCamera(
-      "arcCamera",
-      Math.PI / 4,
-      Math.PI / 4,
-      10,
-      this.solarSystem.earth.mesh.position,
-      this.scene
-    );
-    camera.wheelDeltaPercentage = 0.05;
-    camera.minZ = 0.1;
-    camera.lowerRadiusLimit = 1;
-    camera.attachControl(canvas, true);
-
     // Render loop
     let elapsedSeconds = 0;
 
     this.engine.runRenderLoop(() => {
       const deltaTime = this.engine.getDeltaTime() * 0.001;
       elapsedSeconds += deltaTime;
+      // Global uniforms
       this.globalUniforms.update(elapsedSeconds, this.solarSystem.sun.mesh.position);
+      // Solar System
       this.solarSystem.update(elapsedSeconds);
       // Camera
-      camera.target.copyFrom(this.solarSystem.earth.mesh.position);
+      this.cameraController.update();
       this.scene.render();
     });
 
