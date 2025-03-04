@@ -1,6 +1,6 @@
 import { ShaderMaterial, Scene, Texture, Effect } from "@babylonjs/core";
 
-import texture from "./textures/8k_mercury.jpg";
+import texture from "./textures/2k_mercury.jpg";
 
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
