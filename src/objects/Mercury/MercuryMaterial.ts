@@ -1,6 +1,6 @@
 import { ShaderMaterial, Scene, Texture, Effect } from "@babylonjs/core";
 
-import sunTexture from "./textures/8k_mercury.jpg";
+import texture from "./textures/8k_mercury.jpg";
 
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
@@ -18,7 +18,7 @@ export class MercuryMaterial extends ShaderMaterial {
       needAlphaTesting: true,
     });
 
-    this.setTexture("textureSampler", new Texture(sunTexture, scene));
+    this.setTexture("textureSampler", new Texture(texture, scene));
   }
 
   update() {}
