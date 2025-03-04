@@ -4,6 +4,7 @@ import { Earth } from "./Earth";
 import { Mercury } from "./Mercury";
 import { Venus } from "./Venus";
 import { Planet } from "./Planet";
+import { Mars } from "./Mars";
 import { calculatePlanetsParams, calculateSunParams } from "./utils";
 
 export type SolarSystemParams = {
@@ -17,6 +18,7 @@ export class SolarSystem {
   earth: Earth;
   mercury: Mercury;
   venus: Venus;
+  mars: Mars;
   planets: Planet[];
 
   constructor(scene: Scene, params: SolarSystemParams) {
@@ -31,11 +33,13 @@ export class SolarSystem {
     this.mercury = new Mercury(scene, planetParams.mercury);
     this.venus = new Venus(scene, planetParams.venus);
     this.earth = new Earth(scene, planetParams.earth);
+    this.mars = new Mars(scene, planetParams.mars);
 
     this.planets = [
       this.mercury,
       this.venus,
       this.earth,
+      this.mars,
     ];
   }
 
