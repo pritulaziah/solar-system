@@ -1,14 +1,10 @@
 import "./style.css";
-import {
-  ArcRotateCamera,
-  Engine,
-  Scene,
-  Color4,
-} from "@babylonjs/core";
+import { ArcRotateCamera, Engine, Scene, Color4 } from "@babylonjs/core";
+import { GlobalUniforms } from "@core/GlobalUniforms";
 import { Earth } from "@objects/Earth";
 import { Sun } from "@objects/Sun";
 import { Mercury } from "@objects/Mercury";
-import { GlobalUniforms } from "@core/GlobalUniforms";
+import { Venus } from "@objects/Venus";
 
 class App {
   engine: Engine;
@@ -48,6 +44,7 @@ class App {
     const sun = new Sun(this.scene);
     const earth = new Earth(this.scene);
     const mercury = new Mercury(this.scene);
+    const venus = new Venus(this.scene);
 
     // Camera
     const camera = new ArcRotateCamera(
@@ -71,9 +68,11 @@ class App {
       elapsedSeconds += deltaTime;
 
       this.globalUniforms.update(elapsedSeconds, sun.mesh.position);
+      // Planets
       earth.update(elapsedSeconds);
       mercury.update(elapsedSeconds);
-
+      venus.update(elapsedSeconds);
+      // Camera
       camera.target.copyFrom(earth.mesh.position);
       this.scene.render();
     });

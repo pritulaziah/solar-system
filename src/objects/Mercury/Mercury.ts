@@ -10,7 +10,7 @@ export class Mercury extends Planet {
       orbitSpeed: 0.01 / 0.24,
       diameter: 0.383,
       inclination: 7,
-      orbitColor: new Color3(1, 0.5, 0),
+      orbitColor: new Color3(0.7, 0.7, 0.7),
     });
     const material = new MercuryMaterial(scene);
     this.mesh.material = material;
