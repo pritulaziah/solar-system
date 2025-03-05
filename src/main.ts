@@ -3,6 +3,7 @@ import { Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
 import { CameraController} from "@core/CameraController";
 import { SolarSystem } from "@objects/SolarSystem";
+import { Planet } from "@objects/constants";
 
 class App {
   engine: Engine;
@@ -38,7 +39,7 @@ class App {
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
     this.solarSystem = new SolarSystem(this.scene, { referenceDiameter: 1, referenceOrbitRadius: 500, referenceOrbitSpeed: 0.01 });
-    this.cameraController = new CameraController(this.scene, this.solarSystem.neptune);
+    this.cameraController = new CameraController(this.scene, this.solarSystem.getPlanet(Planet.Earth));
     this.cameraController.attachToCanvas(canvas);
   }
 

@@ -19,15 +19,7 @@ export type SolarSystemParams = {
 
 export class SolarSystem {
   sun: Sun;
-  earth: Earth;
-  mercury: Mercury;
-  venus: Venus;
-  mars: Mars;
-  planets: CelestialBody[];
-  jupiter: Jupiter;
-  saturn: Saturn;
-  uranus: Uranus;
-  neptune: Neptune;
+  planets: Map<Planet, CelestialBody>;
 
   static getPlanetConfig({ referenceOrbitRadius, referenceDiameter, referenceOrbitSpeed }: SolarSystemParams) {
     const earth = PLANETS[Planet.Earth];
@@ -70,31 +62,27 @@ export class SolarSystem {
     const sunParams = SolarSystem.getSunParams(params.referenceDiameter);
 
     this.sun = new Sun(scene, sunParams);
-    this.mercury = new Mercury(scene, planetParams.mercury);
-    this.venus = new Venus(scene, planetParams.venus);
-    this.earth = new Earth(scene, planetParams.earth);
-    this.mars = new Mars(scene, planetParams.mars);
-    this.jupiter = new Jupiter(scene, planetParams.jupiter);
-    this.saturn = new Saturn(scene, planetParams.saturn);
-    this.uranus = new Uranus(scene, planetParams.uranus);
-    this.neptune = new Neptune(scene, planetParams.neptune);
 
-    this.planets = [
-      this.mercury,
-      this.venus,
-      this.earth,
-      this.mars,
-      this.jupiter,
-      this.saturn,
-      this.uranus,
-      this.neptune,
-    ];
+    this.planets = new Map<Planet, CelestialBody>([
+      [Planet.Mercury, new Mercury(scene, planetParams.mercury)],
+      [Planet.Venus, new Venus(scene, planetParams.venus)],
+      [Planet.Earth, new Earth(scene, planetParams.earth)],
+      [Planet.Mars, new Mars(scene, planetParams.mars)],
+      [Planet.Jupiter, new Jupiter(scene, planetParams.jupiter)],
+      [Planet.Saturn, new Saturn(scene, planetParams.saturn)],
+      [Planet.Uranus, new Uranus(scene, planetParams.uranus)],
+      [Planet.Neptune, new Neptune(scene, planetParams.neptune)],
+    ]);
+  }
+
+  getPlanet(planet: Planet) {
+    return this.planets.get(planet)!;
   }
 
   update(elapsedSeconds: number) {
     this.sun.update(elapsedSeconds);
 
-    for (const planet of this.planets) {
+    for (const [_, planet] of this.planets) {
       planet.update(elapsedSeconds);
     }
   }
