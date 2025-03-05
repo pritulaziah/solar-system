@@ -1,6 +1,6 @@
 import { Color3 } from "@babylonjs/core";
 
-export enum Planets {
+export enum Planet {
   Mercury = "mercury",
   Venus = "venus",
   Earth = "earth",
@@ -12,7 +12,7 @@ export enum Planets {
   Pluto = "pluto",
 }
 
-export type PlanetData = {
+export type OrbitalBody = {
   semiMajorAxis: number;
   eccentricity: number;
   inclination: number;
@@ -21,8 +21,8 @@ export type PlanetData = {
   orbitColor: Color3;
 };
 
-export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
-  [Planets.Mercury]: {
+export const PLANETS: { [key in Planet]: OrbitalBody } = {
+  [Planet.Mercury]: {
     semiMajorAxis: 0.387,
     eccentricity: 0.2056,
     inclination: 7.01,
@@ -30,7 +30,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 87.97,
     orbitColor: new Color3(0.7, 0.7, 0.7),
   },
-  [Planets.Venus]: {
+  [Planet.Venus]: {
     semiMajorAxis: 0.723,
     eccentricity: 0.0067,
     inclination: 3.39,
@@ -38,7 +38,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 224.7,
     orbitColor: new Color3(1, 0.85, 0.4),
   },
-  [Planets.Earth]: {
+  [Planet.Earth]: {
     semiMajorAxis: 1.0,
     eccentricity: 0.0167,
     inclination: 0.0,
@@ -46,7 +46,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 365.25,
     orbitColor: new Color3(0, 1, 0),
   },
-  [Planets.Mars]: {
+  [Planet.Mars]: {
     semiMajorAxis: 1.524,
     eccentricity: 0.0934,
     inclination: 1.85,
@@ -54,7 +54,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 686.98,
     orbitColor: new Color3(1, 0.2, 0.2),
   },
-  [Planets.Jupiter]: {
+  [Planet.Jupiter]: {
     semiMajorAxis: 5.204,
     eccentricity: 0.0489,
     inclination: 1.31,
@@ -62,7 +62,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 4332.59,
     orbitColor: new Color3(1, 0.6, 0.2),
   },
-  [Planets.Saturn]: {
+  [Planet.Saturn]: {
     semiMajorAxis: 9.583,
     eccentricity: 0.0565,
     inclination: 2.49,
@@ -70,7 +70,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 10759.22,
     orbitColor: new Color3(0.9, 0.8, 0.5),
   },
-  [Planets.Uranus]: {
+  [Planet.Uranus]: {
     semiMajorAxis: 19.22,
     eccentricity: 0.0463,
     inclination: 0.77,
@@ -78,7 +78,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 30688.5,
     orbitColor: new Color3(0.5, 0.8, 1),
   },
-  [Planets.Neptune]: {
+  [Planet.Neptune]: {
     semiMajorAxis: 30.1,
     eccentricity: 0.0086,
     inclination: 1.77,
@@ -86,7 +86,7 @@ export const REAL_PLANETS: { [key in Planets]: PlanetData } = {
     period: 60182,
     orbitColor: new Color3(0.3, 0.5, 1),
   },
-  [Planets.Pluto]: {
+  [Planet.Pluto]: {
     semiMajorAxis: 39.48,
     eccentricity: 0.2488,
     inclination: 17.16,

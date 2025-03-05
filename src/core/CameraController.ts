@@ -1,12 +1,12 @@
 import { ArcRotateCamera, Scene } from "@babylonjs/core";
 
-import type { Planet } from "@objects/Planet";
+import type { CelestialBody } from "@objects/CelestialBody";
 
 export class CameraController {
   private camera: ArcRotateCamera;
-  private targetPlanet: Planet;
+  private targetPlanet: CelestialBody;
 
-  constructor(scene: Scene, initialPlanet: Planet) {
+  constructor(scene: Scene, initialPlanet: CelestialBody) {
     this.targetPlanet = initialPlanet;
     this.camera = this.createOrbitCamera(scene);
   }
@@ -15,7 +15,7 @@ export class CameraController {
     this.camera.attachControl(canvas, true);
   }
 
-  setTargetPlanet(planet: Planet) {
+  setTargetPlanet(planet: CelestialBody) {
     this.targetPlanet = planet;
   }
 

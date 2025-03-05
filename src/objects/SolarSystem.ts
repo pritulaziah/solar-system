@@ -3,9 +3,10 @@ import { Sun } from "./Sun";
 import { Earth } from "./Earth";
 import { Mercury } from "./Mercury";
 import { Venus } from "./Venus";
-import { Planet } from "./Planet";
+import { CelestialBody, CelestialBodyParams } from "./CelestialBody";
 import { Mars } from "./Mars";
-import { calculatePlanetsParams, calculateSunParams } from "./utils";
+import { Planet, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
+import { SunParams } from "./Sun";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
@@ -19,15 +20,47 @@ export class SolarSystem {
   mercury: Mercury;
   venus: Venus;
   mars: Mars;
-  planets: Planet[];
+  planets: CelestialBody[];
+
+  static getPlanetConfig({ referenceOrbitRadius, referenceDiameter, referenceOrbitSpeed }: SolarSystemParams) {
+    const earth = PLANETS[Planet.Earth];
+    const scaleOrbit = referenceOrbitRadius / earth.semiMajorAxis;
+    const scaleDiameter = referenceDiameter / earth.diameter;
+    const basePeriod = earth.period;
+
+    return Object.fromEntries(
+      Object.entries(PLANETS).map(([planetName, planetData]) => {
+        const {
+          semiMajorAxis,
+          eccentricity,
+          inclination,
+          diameter,
+          period,
+          orbitColor,
+        } = planetData;
+  
+        return [
+          planetName as Planet,
+          {
+            semiMajorAxis: semiMajorAxis * scaleOrbit,
+            eccentricity,
+            inclination,
+            diameter: diameter * scaleDiameter,
+            orbitSpeed: referenceOrbitSpeed * (basePeriod / period),
+            orbitColor,
+          },
+        ];
+      })
+    ) as { [key in Planet]: CelestialBodyParams };
+  }
+
+  static getSunParams(referenceDiameter: number): SunParams {
+    return { diameter: referenceDiameter * EARTH_TO_SUN_RATIO };
+  }
 
   constructor(scene: Scene, params: SolarSystemParams) {
-    const planetParams = calculatePlanetsParams(
-      params.referenceOrbitRadius,
-      params.referenceDiameter,
-      params.referenceOrbitSpeed
-    );
-    const sunParams = calculateSunParams(params.referenceDiameter);
+    const planetParams = SolarSystem.getPlanetConfig(params);
+    const sunParams = SolarSystem.getSunParams(params.referenceDiameter);
 
     this.sun = new Sun(scene, sunParams);
     this.mercury = new Mercury(scene, planetParams.mercury);

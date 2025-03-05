@@ -1,10 +1,10 @@
 import { Scene } from "@babylonjs/core";
 import { MarsMaterial } from "./MarsMaterial";
-import { Planet, PlanetParams } from "../Planet";
+import { CelestialBody, CelestialBodyParams } from "../CelestialBody";
 
-export class Mars extends Planet {
-  constructor(scene: Scene, params: PlanetParams) {
-    super(scene, "marc", params);
+export class Mars extends CelestialBody {
+  constructor(scene: Scene, params: CelestialBodyParams) {
+    super(scene, "mars", params);
     const material = new MarsMaterial(scene);
     this.mesh.material = material;
   }

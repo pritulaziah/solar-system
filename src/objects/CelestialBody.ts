@@ -9,7 +9,7 @@ import {
   CreateSphere,
 } from "@babylonjs/core";
 
-export type PlanetParams = {
+export type CelestialBodyParams = {
   semiMajorAxis: number;
   eccentricity: number;
   inclination: number;
@@ -18,7 +18,7 @@ export type PlanetParams = {
   orbitColor: Color3;
 };
 
-export abstract class Planet {
+export abstract class CelestialBody {
   orbitNode: TransformNode;
   orbitPath: LinesMesh;
   mesh: Mesh;
@@ -31,7 +31,7 @@ export abstract class Planet {
   constructor(
     protected scene: Scene,
     protected name: string,
-    params: PlanetParams
+    params: CelestialBodyParams
   ) {
     this.name = name;
     this.scene = scene;
