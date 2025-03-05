@@ -1,7 +1,8 @@
 import "./style.css";
+import { GUI } from "lil-gui";
 import { Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
-import { CameraController} from "@core/CameraController";
+import { CameraController } from "@core/CameraController";
 import { SolarSystem } from "@objects/SolarSystem";
 import { Planet } from "@objects/constants";
 
@@ -14,7 +15,9 @@ class App {
   params = {
     backgroundColor: "#1d1f2a",
     color: "#ff0000",
+    targetPlanet: Planet.Earth,
   };
+  gui: GUI;
 
   static createEngine(canvas: HTMLCanvasElement): Engine {
     const engine = new Engine(canvas, true, {
@@ -38,9 +41,29 @@ class App {
     this.engine = App.createEngine(canvas);
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
-    this.solarSystem = new SolarSystem(this.scene, { referenceDiameter: 1, referenceOrbitRadius: 500, referenceOrbitSpeed: 0.01 });
-    this.cameraController = new CameraController(this.scene, this.solarSystem.getPlanet(Planet.Earth));
+    this.solarSystem = new SolarSystem(this.scene, {
+      referenceDiameter: 1,
+      referenceOrbitRadius: 500,
+      referenceOrbitSpeed: 0.01,
+    });
+    this.cameraController = new CameraController(
+      this.scene,
+      this.solarSystem.getPlanet(Planet.Earth)!
+    );
     this.cameraController.attachToCanvas(canvas);
+    this.gui = new GUI({ width: 400 });
+    this.initGui();
+  }
+
+  initGui() {
+    const planetNames = Object.values(Planet).filter(value => value !== Planet.Pluto);
+
+    this.gui
+      .add(this.params, "targetPlanet", planetNames)
+      .onChange((newPlanet: Planet) => {
+        const planet = this.solarSystem.getPlanet(newPlanet);
+        this.cameraController.setTargetPlanet(planet);
+      });
   }
 
   async init() {
@@ -51,7 +74,10 @@ class App {
       const deltaTime = this.engine.getDeltaTime() * 0.001;
       elapsedSeconds += deltaTime;
       // Global uniforms
-      this.globalUniforms.update(elapsedSeconds, this.solarSystem.sun.mesh.position);
+      this.globalUniforms.update(
+        elapsedSeconds,
+        this.solarSystem.sun.mesh.position
+      );
       // Solar System
       this.solarSystem.update(elapsedSeconds);
       // Camera

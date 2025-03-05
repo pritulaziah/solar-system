@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.lil-gui .controller.option select option {
+    color: #000;
+}
