@@ -38,7 +38,7 @@ class App {
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
     this.solarSystem = new SolarSystem(this.scene, { referenceDiameter: 1, referenceOrbitRadius: 500, referenceOrbitSpeed: 0.01 });
-    this.cameraController = new CameraController(this.scene, this.solarSystem.earth);
+    this.cameraController = new CameraController(this.scene, this.solarSystem.neptune);
     this.cameraController.attachToCanvas(canvas);
   }
 

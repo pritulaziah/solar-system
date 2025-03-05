@@ -1,12 +1,15 @@
 import { Scene } from "@babylonjs/core";
-import { Sun } from "./Sun";
-import { Earth } from "./Earth";
+import { Sun, SunParams } from "./Sun";
 import { Mercury } from "./Mercury";
 import { Venus } from "./Venus";
-import { CelestialBody, CelestialBodyParams } from "./CelestialBody";
+import { Earth } from "./Earth";
 import { Mars } from "./Mars";
+import { Jupiter } from "./Jupiter";
+import { Saturn } from './Saturn';
+import { Uranus } from './Uranus';
+import { Neptune } from './Neptune';
+import { CelestialBody, CelestialBodyParams } from "./CelestialBody";
 import { Planet, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
-import { SunParams } from "./Sun";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
@@ -21,6 +24,10 @@ export class SolarSystem {
   venus: Venus;
   mars: Mars;
   planets: CelestialBody[];
+  jupiter: Jupiter;
+  saturn: Saturn;
+  uranus: Uranus;
+  neptune: Neptune;
 
   static getPlanetConfig({ referenceOrbitRadius, referenceDiameter, referenceOrbitSpeed }: SolarSystemParams) {
     const earth = PLANETS[Planet.Earth];
@@ -67,12 +74,20 @@ export class SolarSystem {
     this.venus = new Venus(scene, planetParams.venus);
     this.earth = new Earth(scene, planetParams.earth);
     this.mars = new Mars(scene, planetParams.mars);
+    this.jupiter = new Jupiter(scene, planetParams.jupiter);
+    this.saturn = new Saturn(scene, planetParams.saturn);
+    this.uranus = new Uranus(scene, planetParams.uranus);
+    this.neptune = new Neptune(scene, planetParams.neptune);
 
     this.planets = [
       this.mercury,
       this.venus,
       this.earth,
       this.mars,
+      this.jupiter,
+      this.saturn,
+      this.uranus,
+      this.neptune,
     ];
   }
 

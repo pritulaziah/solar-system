@@ -35,6 +35,8 @@ export class CameraController {
     camera.wheelDeltaPercentage = 0.05;
     camera.minZ = 0.1;
     camera.lowerRadiusLimit = 1;
+    camera.upperRadiusLimit = 100;
+    camera.maxZ = 50000;
 
     return camera;
   }
