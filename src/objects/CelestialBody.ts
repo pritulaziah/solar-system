@@ -68,7 +68,7 @@ export abstract class CelestialBody {
 
   private createOrbitPath(color: Color3): LinesMesh {
     const points: Vector3[] = [];
-    const steps = 100;
+    const steps = 1000;
 
     for (let i = 0; i <= steps; i++) {
       const theta = (i / steps) * Math.PI * 2;
