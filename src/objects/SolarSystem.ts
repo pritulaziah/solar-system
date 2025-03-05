@@ -5,27 +5,34 @@ import { Venus } from "./Venus";
 import { Earth } from "./Earth";
 import { Mars } from "./Mars";
 import { Jupiter } from "./Jupiter";
-import { Saturn } from './Saturn';
-import { Uranus } from './Uranus';
-import { Neptune } from './Neptune';
-import { CelestialBody, CelestialBodyParams } from "./CelestialBody";
+import { Saturn } from "./Saturn";
+import { Uranus } from "./Uranus";
+import { Neptune } from "./Neptune";
+import { CelestialBody } from "./CelestialBody";
 import { Planet, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
   referenceDiameter: number;
   referenceOrbitSpeed: number;
-}
+  referenceRotationSpeed: number;
+};
 
 export class SolarSystem {
   sun: Sun;
   planets: Map<Planet, CelestialBody>;
 
-  static getPlanetConfig({ referenceOrbitRadius, referenceDiameter, referenceOrbitSpeed }: SolarSystemParams) {
+  static getPlanetConfig({
+    referenceOrbitRadius,
+    referenceDiameter,
+    referenceOrbitSpeed,
+    referenceRotationSpeed,
+  }: SolarSystemParams) {
     const earth = PLANETS[Planet.Earth];
     const scaleOrbit = referenceOrbitRadius / earth.semiMajorAxis;
     const scaleDiameter = referenceDiameter / earth.diameter;
     const basePeriod = earth.period;
+    const earthRotationPeriod = earth.rotationPeriod;
 
     return Object.fromEntries(
       Object.entries(PLANETS).map(([planetName, planetData]) => {
@@ -36,21 +43,25 @@ export class SolarSystem {
           diameter,
           period,
           orbitColor,
+          rotationPeriod,
+          obliquity,
         } = planetData;
-  
+
         return [
           planetName as Planet,
           {
             semiMajorAxis: semiMajorAxis * scaleOrbit,
             eccentricity,
-            inclination,
+            inclination: inclination * (Math.PI / 180),
             diameter: diameter * scaleDiameter,
             orbitSpeed: referenceOrbitSpeed * (basePeriod / period),
+            rotationSpeed: referenceRotationSpeed * (earthRotationPeriod / rotationPeriod),
             orbitColor,
+            obliquity: obliquity * (Math.PI / 180),
           },
         ];
       })
-    ) as { [key in Planet]: CelestialBodyParams };
+    );
   }
 
   static getSunParams(referenceDiameter: number): SunParams {

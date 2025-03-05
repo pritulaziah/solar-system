@@ -16,6 +16,8 @@ export type CelestialBodyParams = {
   diameter: number;
   orbitSpeed: number;
   orbitColor: Color3;
+  rotationSpeed: number;
+  obliquity: number;
 };
 
 export abstract class CelestialBody {
@@ -27,6 +29,8 @@ export abstract class CelestialBody {
   inclination: number;
   diameter: number;
   orbitSpeed: number;
+  rotationSpeed: number;
+  obliquity: number;
 
   constructor(
     protected scene: Scene,
@@ -40,9 +44,11 @@ export abstract class CelestialBody {
     this.inclination = params.inclination * (Math.PI / 180);
     this.diameter = params.diameter;
     this.orbitSpeed = params.orbitSpeed;
+    this.obliquity = params.obliquity;
+    this.rotationSpeed = params.rotationSpeed;
+
     this.orbitNode = this.createOrbitNode();
     this.mesh = this.createMesh();
-    this.mesh.parent = this.orbitNode;
     this.orbitPath = this.createOrbitPath(params.orbitColor);
   }
 
@@ -56,6 +62,7 @@ export abstract class CelestialBody {
     const z = this.semiMinorAxis * Math.sin(theta);
     const y = Math.sin(this.inclination) * z;
 
+    this.mesh.rotation.y = elapsedSeconds * this.rotationSpeed;
     this.mesh.position.set(x, y, z);
   }
 
@@ -95,7 +102,8 @@ export abstract class CelestialBody {
       { diameter: this.diameter, segments: 64 },
       this.scene
     );
-    planetMesh.rotation.y = Math.PI / 4;
+    planetMesh.rotation.x = this.obliquity;
+    planetMesh.parent = this.orbitNode;
 
     return planetMesh;
   }

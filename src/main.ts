@@ -45,6 +45,7 @@ class App {
       referenceDiameter: 1,
       referenceOrbitRadius: 500,
       referenceOrbitSpeed: 0.01,
+      referenceRotationSpeed: 0.1,
     });
     this.cameraController = new CameraController(
       this.scene,
