@@ -1,4 +1,4 @@
-import { ShaderMaterial, Scene, Texture, Effect, Vector3 } from "@babylonjs/core";
+import { Scene, Texture, Effect, Mesh } from "@babylonjs/core";
 
 import dayTexture from "./textures/8k_earth_daymap.jpg";
 import nightTexture from "./textures/8k_earth_nightmap.jpg";
@@ -8,13 +8,15 @@ import vertexShader from "./shaders/vertex.glsl";
 
 import { GlobalUniforms } from "@core/GlobalUniforms";
 
+import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+
 const shaderName = "earthMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class EarthMaterial extends ShaderMaterial {
+export class EarthMaterial extends UpdatebleMaterial {
   constructor(scene: Scene) {
-    super(shaderName, scene, shaderName, {
+    super(shaderName, scene, {
       attributes: ["position", "normal", "uv"],
       uniforms: [
         "world",
@@ -33,7 +35,7 @@ export class EarthMaterial extends ShaderMaterial {
     this.setTexture("nightTexture", new Texture(nightTexture, scene));
   }
 
-  update(earthPosition: Vector3) {
-    this.setVector3('earthPosition', earthPosition);
+  update(mesh: Mesh) {
+    this.setVector3('earthPosition', mesh.absolutePosition);
   }
 }

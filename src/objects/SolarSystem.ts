@@ -1,15 +1,16 @@
 import { Scene } from "@babylonjs/core";
-import { Sun, SunParams } from "./Sun";
-import { Mercury } from "./Mercury";
-import { Venus } from "./Venus";
-import { Earth } from "./Earth";
-import { Mars } from "./Mars";
-import { Jupiter } from "./Jupiter";
-import { Saturn } from "./Saturn";
-import { Uranus } from "./Uranus";
-import { Neptune } from "./Neptune";
-import { CelestialBody } from "./CelestialBody";
-import { Planet, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
+import { Sun, SunParams } from "@materials/Sun";
+import { PlanetName, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
+import { Planet, PlanetParams } from "./Planet";
+import { EarthMaterial } from "@materials/Earth/EarthMaterial";
+import { MarsMaterial } from "@materials/Mars/MarsMaterial";
+import { JupiterMaterial } from "@materials/Jupiter/JupiterMaterial";
+import { SaturnMaterial } from "@materials/Saturn/SaturnMaterial";
+import { UranusMaterial } from "@materials/Uranus/UranusMaterial";
+import { MercuryMaterial } from "@materials/Mercury/MercuryMaterial";
+import { NeptuneMaterial } from "@materials/Neptune/NeptuneMaterial";
+import { VenusMaterial } from "@materials/Venus/VenusMaterial";
+import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
@@ -20,73 +21,90 @@ export type SolarSystemParams = {
 
 export class SolarSystem {
   sun: Sun;
-  planets: Map<Planet, CelestialBody>;
+  planets = new Map<PlanetName, Planet>();
 
-  static getPlanetConfig({
-    referenceOrbitRadius,
-    referenceDiameter,
-    referenceOrbitSpeed,
-    referenceRotationSpeed,
-  }: SolarSystemParams) {
-    const earth = PLANETS[Planet.Earth];
-    const scaleOrbit = referenceOrbitRadius / earth.semiMajorAxis;
-    const scaleDiameter = referenceDiameter / earth.diameter;
-    const basePeriod = earth.period;
-    const earthRotationPeriod = earth.rotationPeriod;
-
-    return Object.fromEntries(
-      Object.entries(PLANETS).map(([planetName, planetData]) => {
-        const {
-          semiMajorAxis,
-          eccentricity,
-          inclination,
-          diameter,
-          period,
-          orbitColor,
-          rotationPeriod,
-          obliquity,
-        } = planetData;
-
-        return [
-          planetName as Planet,
-          {
-            semiMajorAxis: semiMajorAxis * scaleOrbit,
-            eccentricity,
-            inclination: inclination * (Math.PI / 180),
-            diameter: diameter * scaleDiameter,
-            orbitSpeed: referenceOrbitSpeed * (basePeriod / period),
-            rotationSpeed: referenceRotationSpeed * (earthRotationPeriod / rotationPeriod),
-            orbitColor,
-            obliquity: obliquity * (Math.PI / 180),
-          },
-        ];
-      })
-    );
+  static createPlanetMaterial(planetName: PlanetName, scene: Scene): UpdatebleMaterial | undefined {
+    switch (planetName) {
+      case PlanetName.Earth:
+        return new EarthMaterial(scene);
+      case PlanetName.Mars:
+        return new MarsMaterial(scene);
+      case PlanetName.Jupiter:
+        return new JupiterMaterial(scene);
+      case PlanetName.Saturn:
+        return new SaturnMaterial(scene);
+      case PlanetName.Uranus:
+        return new UranusMaterial(scene);
+      case PlanetName.Mercury:
+        return new MercuryMaterial(scene);
+      case PlanetName.Neptune:
+        return new NeptuneMaterial(scene);
+      case PlanetName.Venus:
+        return new VenusMaterial(scene);
+      default:
+        return undefined;
+    }
   }
 
   static getSunParams(referenceDiameter: number): SunParams {
     return { diameter: referenceDiameter * EARTH_TO_SUN_RATIO };
   }
 
-  constructor(scene: Scene, params: SolarSystemParams) {
-    const planetParams = SolarSystem.getPlanetConfig(params);
+  constructor(
+    private scene: Scene,
+    private params: SolarSystemParams
+  ) {
     const sunParams = SolarSystem.getSunParams(params.referenceDiameter);
+    this.createPlanets();
 
     this.sun = new Sun(scene, sunParams);
-
-    this.planets = new Map<Planet, CelestialBody>([
-      [Planet.Mercury, new Mercury(scene, planetParams.mercury)],
-      [Planet.Venus, new Venus(scene, planetParams.venus)],
-      [Planet.Earth, new Earth(scene, planetParams.earth)],
-      [Planet.Mars, new Mars(scene, planetParams.mars)],
-      [Planet.Jupiter, new Jupiter(scene, planetParams.jupiter)],
-      [Planet.Saturn, new Saturn(scene, planetParams.saturn)],
-      [Planet.Uranus, new Uranus(scene, planetParams.uranus)],
-      [Planet.Neptune, new Neptune(scene, planetParams.neptune)],
-    ]);
   }
 
-  getPlanet(planet: Planet) {
+  createPlanets() {
+    const {
+      referenceOrbitRadius,
+      referenceDiameter,
+      referenceOrbitSpeed,
+      referenceRotationSpeed,
+    } = this.params;
+
+    const earth = PLANETS[PlanetName.Earth];
+    const scaleOrbit = referenceOrbitRadius / earth.semiMajorAxis;
+    const scaleDiameter = referenceDiameter / earth.diameter;
+    const basePeriod = earth.period;
+    const earthRotationPeriod = earth.rotationPeriod;
+
+    for (const [planetName, planetData] of Object.entries(PLANETS)) {
+      const {
+        semiMajorAxis,
+        eccentricity,
+        inclination,
+        diameter,
+        period,
+        orbitColor,
+        rotationPeriod,
+        obliquity,
+      } = planetData;
+
+      const planetParams: PlanetParams = {
+        semiMajorAxis: semiMajorAxis * scaleOrbit,
+        eccentricity,
+        inclination: inclination * (Math.PI / 180),
+        diameter: diameter * scaleDiameter,
+        orbitSpeed: referenceOrbitSpeed * (basePeriod / period),
+        rotationSpeed:
+          referenceRotationSpeed * (earthRotationPeriod / rotationPeriod),
+        orbitColor,
+        obliquity: obliquity * (Math.PI / 180),
+      };
+
+      const material = SolarSystem.createPlanetMaterial(planetName as PlanetName, this.scene);
+      const planet = new Planet(this.scene, planetName, planetParams, material);
+      this.planets.set(planetName as PlanetName, planet);
+    }
+  }
+
+  getPlanet(planet: PlanetName): Planet {
     return this.planets.get(planet)!;
   }
 

@@ -24,6 +24,7 @@
     "paths": {
       "@core/*": ["src/core/*"],
       "@objects/*": ["src/objects/*"],
+      "@materials/*": ["src/materials/*"],
     }
   },
   "include": ["src"]

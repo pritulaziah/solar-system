@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       '@objects': path.resolve(__dirname, './src/objects'),
       '@core': path.resolve(__dirname, './src/core'),
+      '@materials': path.resolve(__dirname, './src/materials'),
     },
   },
   plugins: [glsl(), tailwindcss()],

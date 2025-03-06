@@ -15,10 +15,10 @@ export default [
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_"
+          caughtErrorsIgnorePattern: "^_",
         },
       ],
-      indent: ["error", 2],
+      indent: ["error", 2, { SwitchCase: 1 }],
     },
   },
 ];

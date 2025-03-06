@@ -1,17 +1,19 @@
-import { ShaderMaterial, Scene, Texture, Effect } from "@babylonjs/core";
+import { Scene, Texture, Effect } from "@babylonjs/core";
 
-import texture from "./textures/2k_neptune.jpg";
+import texture from "./textures/2k_saturn.jpg";
 
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
 
-const shaderName = "neptuneMaterial";
+import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+
+const shaderName = "saturnMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class NeptuneMaterial extends ShaderMaterial {
+export class SaturnMaterial extends UpdatebleMaterial {
   constructor(scene: Scene) {
-    super(shaderName, scene, shaderName, {
+    super(shaderName, scene, {
       attributes: ["position", "uv"],
       uniforms: ["worldViewProjection"],
       needAlphaBlending: true,

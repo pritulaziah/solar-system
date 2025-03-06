@@ -8,6 +8,7 @@ import {
   Color3,
   CreateSphere,
 } from "@babylonjs/core";
+import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
 
 export type CelestialBodyParams = {
   semiMajorAxis: number;
@@ -24,46 +25,36 @@ export abstract class CelestialBody {
   orbitNode: TransformNode;
   orbitPath: LinesMesh;
   mesh: Mesh;
-  semiMajorAxis: number;
-  eccentricity: number;
-  inclination: number;
-  diameter: number;
-  orbitSpeed: number;
-  rotationSpeed: number;
-  obliquity: number;
 
   constructor(
     protected scene: Scene,
     protected name: string,
-    params: CelestialBodyParams
+    protected params: CelestialBodyParams,
+    protected material?: UpdatebleMaterial
   ) {
-    this.name = name;
-    this.scene = scene;
-    this.eccentricity = params.eccentricity;
-    this.semiMajorAxis = params.semiMajorAxis;
-    this.inclination = params.inclination * (Math.PI / 180);
-    this.diameter = params.diameter;
-    this.orbitSpeed = params.orbitSpeed;
-    this.obliquity = params.obliquity;
-    this.rotationSpeed = params.rotationSpeed;
-
     this.orbitNode = this.createOrbitNode();
     this.mesh = this.createMesh();
     this.orbitPath = this.createOrbitPath(params.orbitColor);
   }
 
   get semiMinorAxis() {
-    return this.semiMajorAxis * Math.sqrt(1 - this.eccentricity ** 2);
+    return (
+      this.params.semiMajorAxis * Math.sqrt(1 - this.params.eccentricity ** 2)
+    );
   }
 
   update(elapsedSeconds: number) {
-    const theta = elapsedSeconds * this.orbitSpeed;
-    const x = this.semiMajorAxis * Math.cos(theta);
+    const theta = elapsedSeconds * this.params.orbitSpeed;
+    const x = this.params.semiMajorAxis * Math.cos(theta);
     const z = this.semiMinorAxis * Math.sin(theta);
-    const y = Math.sin(this.inclination) * z;
+    const y = Math.sin(this.params.inclination) * z;
 
-    this.mesh.rotation.y = elapsedSeconds * this.rotationSpeed;
+    this.mesh.rotation.y = elapsedSeconds * this.params.rotationSpeed;
     this.mesh.position.set(x, y, z);
+
+    if (this.material) {
+      this.material?.update(this.mesh);
+    }
   }
 
   private createOrbitNode(): TransformNode {
@@ -79,9 +70,9 @@ export abstract class CelestialBody {
 
     for (let i = 0; i <= steps; i++) {
       const theta = (i / steps) * Math.PI * 2;
-      const x = this.semiMajorAxis * Math.cos(theta);
+      const x = this.params.semiMajorAxis * Math.cos(theta);
       const z = this.semiMinorAxis * Math.sin(theta);
-      const y = Math.sin(this.inclination) * z;
+      const y = Math.sin(this.params.inclination) * z;
 
       points.push(new Vector3(x, y, z));
     }
@@ -99,10 +90,15 @@ export abstract class CelestialBody {
   private createMesh(): Mesh {
     const planetMesh = CreateSphere(
       this.name,
-      { diameter: this.diameter, segments: 64 },
+      { diameter: this.params.diameter, segments: 64 },
       this.scene
     );
-    planetMesh.rotation.x = this.obliquity;
+
+    if (this.material) {
+      planetMesh.material = this.material;
+    }
+
+    planetMesh.rotation.x = this.params.obliquity;
     planetMesh.parent = this.orbitNode;
 
     return planetMesh;

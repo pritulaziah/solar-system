@@ -4,7 +4,7 @@ import { Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
 import { CameraController } from "@core/CameraController";
 import { SolarSystem } from "@objects/SolarSystem";
-import { Planet } from "@objects/constants";
+import { PlanetName } from "@objects/constants";
 
 class App {
   engine: Engine;
@@ -15,7 +15,7 @@ class App {
   params = {
     backgroundColor: "#1d1f2a",
     color: "#ff0000",
-    targetPlanet: Planet.Earth,
+    targetPlanet: PlanetName.Earth,
   };
   gui: GUI;
 
@@ -49,7 +49,7 @@ class App {
     });
     this.cameraController = new CameraController(
       this.scene,
-      this.solarSystem.getPlanet(Planet.Earth)!
+      this.solarSystem.getPlanet(PlanetName.Earth)!
     );
     this.cameraController.attachToCanvas(canvas);
     this.gui = new GUI({ width: 400 });
@@ -57,11 +57,11 @@ class App {
   }
 
   initGui() {
-    const planetNames = Object.values(Planet).filter(value => value !== Planet.Pluto);
+    const planetNames = Object.values(PlanetName);
 
     this.gui
       .add(this.params, "targetPlanet", planetNames)
-      .onChange((newPlanet: Planet) => {
+      .onChange((newPlanet: PlanetName) => {
         const planet = this.solarSystem.getPlanet(newPlanet);
         this.cameraController.setTargetPlanet(planet);
       });

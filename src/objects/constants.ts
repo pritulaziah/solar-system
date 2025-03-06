@@ -1,6 +1,6 @@
 import { Color3 } from "@babylonjs/core";
 
-export enum Planet {
+export enum PlanetName {
   Mercury = "mercury",
   Venus = "venus",
   Earth = "earth",
@@ -23,8 +23,12 @@ export type OrbitalBody = {
   obliquity: number;
 };
 
-export const PLANETS: { [key in Planet]: OrbitalBody } = {
-  [Planet.Mercury]: {
+export type PlanetBody = OrbitalBody & {
+  moons?: Array<OrbitalBody & { name: string }>;
+}
+
+export const PLANETS: { [key in PlanetName]: PlanetBody } = {
+  [PlanetName.Mercury]: {
     semiMajorAxis: 57.9,
     eccentricity: 0.206,
     inclination: 7.0,
@@ -34,7 +38,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 0.034,
     orbitColor: new Color3(0.7, 0.7, 0.7),
   },
-  [Planet.Venus]: {
+  [PlanetName.Venus]: {
     semiMajorAxis: 108.2,
     eccentricity: 0.007,
     inclination: 3.4,
@@ -44,7 +48,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 177.4,
     orbitColor: new Color3(1, 0.85, 0.4),
   },
-  [Planet.Earth]: {
+  [PlanetName.Earth]: {
     semiMajorAxis: 149.6,
     eccentricity: 0.017,
     inclination: 0.0,
@@ -53,8 +57,21 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     rotationPeriod: 23.9,
     obliquity: 23.4,
     orbitColor: new Color3(0, 1, 0),
+    moons: [
+      {
+        name: "luna",
+        semiMajorAxis: 0.384,
+        eccentricity: 0.055,
+        inclination: 5.1,
+        diameter: 3475,
+        period: 27.3,
+        rotationPeriod: 655.7,
+        obliquity: 6.7,
+        orbitColor: new Color3(0.7, 0.7, 0.7),
+      },
+    ],
   },
-  [Planet.Mars]: {
+  [PlanetName.Mars]: {
     semiMajorAxis: 228.0,
     eccentricity: 0.094,
     inclination: 1.8,
@@ -64,7 +81,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 25.2,
     orbitColor: new Color3(1, 0.2, 0.2),
   },
-  [Planet.Jupiter]: {
+  [PlanetName.Jupiter]: {
     semiMajorAxis: 778.5,
     eccentricity: 0.049,
     inclination: 1.3,
@@ -74,7 +91,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 3.1,
     orbitColor: new Color3(1, 0.6, 0.2),
   },
-  [Planet.Saturn]: {
+  [PlanetName.Saturn]: {
     semiMajorAxis: 1432.0,
     eccentricity: 0.052,
     inclination: 2.5,
@@ -84,7 +101,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 26.7,
     orbitColor: new Color3(0.9, 0.8, 0.5),
   },
-  [Planet.Uranus]: {
+  [PlanetName.Uranus]: {
     semiMajorAxis: 2867.0,
     eccentricity: 0.047,
     inclination: 0.8,
@@ -94,7 +111,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 97.8,
     orbitColor: new Color3(0.5, 0.8, 1),
   },
-  [Planet.Neptune]: {
+  [PlanetName.Neptune]: {
     semiMajorAxis: 4515.0,
     eccentricity: 0.01,
     inclination: 1.8,
@@ -104,7 +121,7 @@ export const PLANETS: { [key in Planet]: OrbitalBody } = {
     obliquity: 28.3,
     orbitColor: new Color3(0.3, 0.5, 1),
   },
-  [Planet.Pluto]: {
+  [PlanetName.Pluto]: {
     semiMajorAxis: 5906.4,
     eccentricity: 0.244,
     inclination: 17.2,
