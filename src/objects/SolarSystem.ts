@@ -1,16 +1,8 @@
 import { Scene } from "@babylonjs/core";
 import { Sun, SunParams } from "@materials/Sun";
+import { Planet, PlanetParams } from "@objects/Planet";
+import { PlanetMaterialFactory } from "@materials/PlanetMaterialFactory";
 import { PlanetName, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
-import { Planet, PlanetParams } from "./Planet";
-import { EarthMaterial } from "@materials/Earth/EarthMaterial";
-import { MarsMaterial } from "@materials/Mars/MarsMaterial";
-import { JupiterMaterial } from "@materials/Jupiter/JupiterMaterial";
-import { SaturnMaterial } from "@materials/Saturn/SaturnMaterial";
-import { UranusMaterial } from "@materials/Uranus/UranusMaterial";
-import { MercuryMaterial } from "@materials/Mercury/MercuryMaterial";
-import { NeptuneMaterial } from "@materials/Neptune/NeptuneMaterial";
-import { VenusMaterial } from "@materials/Venus/VenusMaterial";
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
@@ -22,29 +14,6 @@ export type SolarSystemParams = {
 export class SolarSystem {
   sun: Sun;
   planets = new Map<PlanetName, Planet>();
-
-  static createPlanetMaterial(planetName: PlanetName, scene: Scene): UpdatebleMaterial | undefined {
-    switch (planetName) {
-      case PlanetName.Earth:
-        return new EarthMaterial(scene);
-      case PlanetName.Mars:
-        return new MarsMaterial(scene);
-      case PlanetName.Jupiter:
-        return new JupiterMaterial(scene);
-      case PlanetName.Saturn:
-        return new SaturnMaterial(scene);
-      case PlanetName.Uranus:
-        return new UranusMaterial(scene);
-      case PlanetName.Mercury:
-        return new MercuryMaterial(scene);
-      case PlanetName.Neptune:
-        return new NeptuneMaterial(scene);
-      case PlanetName.Venus:
-        return new VenusMaterial(scene);
-      default:
-        return undefined;
-    }
-  }
 
   static getSunParams(referenceDiameter: number): SunParams {
     return { diameter: referenceDiameter * EARTH_TO_SUN_RATIO };
@@ -98,7 +67,7 @@ export class SolarSystem {
         obliquity: obliquity * (Math.PI / 180),
       };
 
-      const material = SolarSystem.createPlanetMaterial(planetName as PlanetName, this.scene);
+      const material = PlanetMaterialFactory.create(planetName as PlanetName, this.scene);
       const planet = new Planet(this.scene, planetName, planetParams, material);
       this.planets.set(planetName as PlanetName, planet);
     }
