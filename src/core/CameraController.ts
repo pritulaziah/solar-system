@@ -20,7 +20,7 @@ export class CameraController {
   }
 
   update() {
-    this.camera.target.copyFrom(this.targetPlanet.mesh.position);
+    this.camera.target.copyFrom(this.targetPlanet.meshNode.position);
   }
 
   private createOrbitCamera(scene: Scene): ArcRotateCamera {

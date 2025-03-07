@@ -1,8 +1,10 @@
 import { Scene } from "@babylonjs/core";
 import { Sun, SunParams } from "@materials/Sun";
 import { Planet, PlanetParams } from "@objects/Planet";
+import { Moon, MoonParams } from "@objects/Moon";
 import { PlanetMaterialFactory } from "@materials/PlanetMaterialFactory";
 import { PlanetName, PLANETS, EARTH_TO_SUN_RATIO } from "./constants";
+import { MoonMaterialFactory } from "@materials/MoonMaterialFactory";
 
 export type SolarSystemParams = {
   referenceOrbitRadius: number;
@@ -53,6 +55,7 @@ export class SolarSystem {
         orbitColor,
         rotationPeriod,
         obliquity,
+        moons = [],
       } = planetData;
 
       const planetParams: PlanetParams = {
@@ -67,9 +70,40 @@ export class SolarSystem {
         obliquity: obliquity * (Math.PI / 180),
       };
 
-      const material = PlanetMaterialFactory.create(planetName as PlanetName, this.scene);
-      const planet = new Planet(this.scene, planetName, planetParams, material);
+      const planetMaterial = PlanetMaterialFactory.create(
+        planetName as PlanetName,
+        this.scene
+      );
+      const planet = new Planet(this.scene, planetName, planetParams, planetMaterial);
       this.planets.set(planetName as PlanetName, planet);
+
+      for (const moonData of moons) {
+        const moonParams: MoonParams = {
+          semiMajorAxis: moonData.semiMajorAxis * scaleOrbit,
+          eccentricity: moonData.eccentricity,
+          inclination: moonData.inclination * (Math.PI / 180),
+          diameter: moonData.diameter * scaleDiameter,
+          orbitSpeed: referenceOrbitSpeed * (basePeriod / moonData.period),
+          rotationSpeed:
+            referenceRotationSpeed *
+            (earthRotationPeriod / moonData.rotationPeriod),
+          orbitColor: moonData.orbitColor,
+          obliquity: moonData.obliquity * (Math.PI / 180),
+        };
+
+        const moonMaterial = MoonMaterialFactory.create(
+          moonData.name,
+          this.scene
+        );
+        const moon = new Moon(
+          this.scene,
+          moonData.name,
+          moonParams,
+          planet,
+          moonMaterial,
+        );
+        planet.addMoon(moon);
+      }
     }
   }
 

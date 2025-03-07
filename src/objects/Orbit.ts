@@ -16,8 +16,8 @@ export type OrbitParams = {
 };
 
 export class Orbit {
-  orbitNode: TransformNode;
-  orbitPath: LinesMesh;
+  node: TransformNode;
+  path: LinesMesh;
 
   constructor(
     private scene: Scene,
@@ -25,13 +25,13 @@ export class Orbit {
     private params: OrbitParams,
     parent?: TransformNode
   ) {
-    this.orbitNode = new TransformNode(`${name}OrbitNode`, scene);
+    this.node = new TransformNode(`${name}OrbitNode`, scene);
 
     if (parent) {
-      this.orbitNode.parent = parent;
+      this.node.parent = parent;
     }
 
-    this.orbitPath = this.drawPath();
+    this.path = this.drawPath();
   }
 
   private get semiMinorAxis() {
@@ -55,7 +55,7 @@ export class Orbit {
 
     const orbitPath = CreateLines(`${this.name}OrbitPath`, { points }, this.scene);
     orbitPath.color = this.params.orbitColor;
-    orbitPath.parent = this.orbitNode;
+    orbitPath.parent = this.node;
 
     return orbitPath;
   }

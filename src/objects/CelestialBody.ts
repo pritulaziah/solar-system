@@ -1,4 +1,4 @@
-import { Scene, Mesh, Color3, CreateSphere } from "@babylonjs/core";
+import { Scene, Mesh, Color3, CreateSphere, TransformNode } from "@babylonjs/core";
 import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
 import { Orbit } from "./Orbit";
 
@@ -16,12 +16,14 @@ export type CelestialBodyParams = {
 export abstract class CelestialBody {
   mesh: Mesh;
   orbit: Orbit;
+  meshNode: TransformNode;
 
   constructor(
     protected scene: Scene,
     protected name: string,
     protected params: CelestialBodyParams,
-    protected material?: UpdatebleMaterial
+    protected material?: UpdatebleMaterial,
+    protected parent?: TransformNode
   ) {
     this.orbit = new Orbit(scene, name, {
       eccentricity: params.eccentricity,
@@ -29,13 +31,17 @@ export abstract class CelestialBody {
       orbitColor: params.orbitColor,
       orbitSpeed: params.orbitSpeed,
       semiMajorAxis: params.semiMajorAxis,
-    });
+    }, parent);
+    this.meshNode = new TransformNode(`${name}MeshNode`, this.scene);
+    this.meshNode.parent = this.orbit.node;
     this.mesh = this.createMesh();
   }
 
   update(elapsedSeconds: number) {
+    const orbitPos = this.orbit.getPositionOnOrbit(elapsedSeconds);
     this.mesh.rotation.y = elapsedSeconds * this.params.rotationSpeed;
-    this.mesh.position.copyFrom(this.orbit.getPositionOnOrbit(elapsedSeconds));
+    this.meshNode.position.copyFrom(orbitPos);
+    // this.mesh.position.copyFrom(this.orbit.getPositionOnOrbit(elapsedSeconds));
 
     if (this.material) {
       this.material?.update(this.mesh);
@@ -54,7 +60,7 @@ export abstract class CelestialBody {
     }
 
     mesh.rotation.x = this.params.obliquity;
-    mesh.parent = this.orbit.orbitNode;
+    mesh.parent = this.meshNode;
 
     return mesh;
   }
