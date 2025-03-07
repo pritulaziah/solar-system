@@ -1,14 +1,6 @@
-import {
-  Scene,
-  Mesh,
-  TransformNode,
-  LinesMesh,
-  Vector3,
-  CreateLines,
-  Color3,
-  CreateSphere,
-} from "@babylonjs/core";
+import { Scene, Mesh, Color3, CreateSphere } from "@babylonjs/core";
 import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { Orbit } from "./Orbit";
 
 export type CelestialBodyParams = {
   semiMajorAxis: number;
@@ -22,9 +14,8 @@ export type CelestialBodyParams = {
 };
 
 export abstract class CelestialBody {
-  orbitNode: TransformNode;
-  orbitPath: LinesMesh;
   mesh: Mesh;
+  orbit: Orbit;
 
   constructor(
     protected scene: Scene,
@@ -32,75 +23,39 @@ export abstract class CelestialBody {
     protected params: CelestialBodyParams,
     protected material?: UpdatebleMaterial
   ) {
-    this.orbitNode = this.createOrbitNode();
+    this.orbit = new Orbit(scene, name, {
+      eccentricity: params.eccentricity,
+      inclination: params.inclination,
+      orbitColor: params.orbitColor,
+      orbitSpeed: params.orbitSpeed,
+      semiMajorAxis: params.semiMajorAxis,
+    });
     this.mesh = this.createMesh();
-    this.orbitPath = this.createOrbitPath(params.orbitColor);
-  }
-
-  get semiMinorAxis() {
-    return (
-      this.params.semiMajorAxis * Math.sqrt(1 - this.params.eccentricity ** 2)
-    );
   }
 
   update(elapsedSeconds: number) {
-    const theta = elapsedSeconds * this.params.orbitSpeed;
-    const x = this.params.semiMajorAxis * Math.cos(theta);
-    const z = this.semiMinorAxis * Math.sin(theta);
-    const y = Math.sin(this.params.inclination) * z;
-
     this.mesh.rotation.y = elapsedSeconds * this.params.rotationSpeed;
-    this.mesh.position.set(x, y, z);
+    this.mesh.position.copyFrom(this.orbit.getPositionOnOrbit(elapsedSeconds));
 
     if (this.material) {
       this.material?.update(this.mesh);
     }
   }
 
-  private createOrbitNode(): TransformNode {
-    const orbitNode = new TransformNode(`${this.name}Orbit`, this.scene);
-    orbitNode.position = Vector3.Zero();
-
-    return orbitNode;
-  }
-
-  private createOrbitPath(color: Color3): LinesMesh {
-    const points: Vector3[] = [];
-    const steps = 1000;
-
-    for (let i = 0; i <= steps; i++) {
-      const theta = (i / steps) * Math.PI * 2;
-      const x = this.params.semiMajorAxis * Math.cos(theta);
-      const z = this.semiMinorAxis * Math.sin(theta);
-      const y = Math.sin(this.params.inclination) * z;
-
-      points.push(new Vector3(x, y, z));
-    }
-
-    const orbitPath = CreateLines(
-      `${this.name}OrbitPath`,
-      { points },
-      this.scene
-    );
-    orbitPath.color = color;
-
-    return orbitPath;
-  }
-
   private createMesh(): Mesh {
-    const planetMesh = CreateSphere(
+    const mesh = CreateSphere(
       this.name,
       { diameter: this.params.diameter, segments: 64 },
       this.scene
     );
 
     if (this.material) {
-      planetMesh.material = this.material;
+      mesh.material = this.material;
     }
 
-    planetMesh.rotation.x = this.params.obliquity;
-    planetMesh.parent = this.orbitNode;
+    mesh.rotation.x = this.params.obliquity;
+    mesh.parent = this.orbit.orbitNode;
 
-    return planetMesh;
+    return mesh;
   }
 }
