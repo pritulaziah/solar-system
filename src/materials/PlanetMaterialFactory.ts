@@ -10,13 +10,13 @@ import { MercuryMaterial } from "@materials/Mercury/MercuryMaterial";
 import { NeptuneMaterial } from "@materials/Neptune/NeptuneMaterial";
 import { VenusMaterial } from "@materials/Venus/VenusMaterial";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 export class PlanetMaterialFactory {
   static create(
     planetName: PlanetName,
     scene: Scene
-  ): UpdatebleMaterial | undefined {
+  ): UpdatableMaterial | undefined {
     switch (planetName) {
       case PlanetName.Earth:
         return new EarthMaterial(scene);

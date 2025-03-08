@@ -5,13 +5,13 @@ import texture from "./textures/8k_sun.jpg";
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 const shaderName = "sunMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class SunMaterial extends UpdatebleMaterial {
+export class SunMaterial extends UpdatableMaterial {
   constructor(scene: Scene) {
     super(shaderName, scene, {
       attributes: ["position", "uv"],

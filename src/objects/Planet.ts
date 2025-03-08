@@ -1,5 +1,5 @@
 import { Scene } from "@babylonjs/core";
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 import { CelestialBody, CelestialBodyParams } from "@objects/CelestialBody";
 import { Moon } from "@objects/Moon";
 
@@ -9,10 +9,10 @@ export class Planet extends CelestialBody {
   private moons: Moon[] = [];
 
   constructor(
-    protected scene: Scene,
-    protected name: string,
-    protected params: PlanetParams,
-    protected material?: UpdatebleMaterial
+    scene: Scene,
+    name: string,
+    params: PlanetParams,
+    material?: UpdatableMaterial
   ) {
     super(scene, name, params, material);
   }

@@ -8,13 +8,13 @@ import vertexShader from "./shaders/vertex.glsl";
 
 import { GlobalUniforms } from "@core/GlobalUniforms";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 const shaderName = "earthMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class EarthMaterial extends UpdatebleMaterial {
+export class EarthMaterial extends UpdatableMaterial {
   constructor(scene: Scene) {
     super(shaderName, scene, {
       attributes: ["position", "normal", "uv"],

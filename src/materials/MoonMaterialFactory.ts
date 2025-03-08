@@ -1,13 +1,13 @@
 import { Scene } from "@babylonjs/core";
 
 import { MoonMaterial } from "@materials/Moon/MoonMaterial";
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 export class MoonMaterialFactory {
   static create(
     moonName: string,
     scene: Scene
-  ): UpdatebleMaterial | undefined {
+  ): UpdatableMaterial | undefined {
     switch (moonName) {
       case 'luna':
         return new MoonMaterial(scene);

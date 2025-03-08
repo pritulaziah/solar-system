@@ -5,13 +5,13 @@ import texture from "./textures/2k_moon.jpg";
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 const shaderName = "moonMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class MoonMaterial extends UpdatebleMaterial {
+export class MoonMaterial extends UpdatableMaterial {
   constructor(scene: Scene) {
     super(shaderName, scene, {
       attributes: ["position", "uv"],

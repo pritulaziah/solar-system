@@ -5,13 +5,13 @@ import texture from "./textures/2k_mercury.jpg";
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 const shaderName = "mercuryMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class MercuryMaterial extends UpdatebleMaterial {
+export class MercuryMaterial extends UpdatableMaterial {
   constructor(scene: Scene) {
     super(shaderName, scene, {
       attributes: ["position", "uv"],

@@ -5,13 +5,13 @@ import texture from "./textures/2k_mars.jpg";
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
 
-import { UpdatebleMaterial } from "@materials/UpdatebleMaterial";
+import { UpdatableMaterial } from "@materials/UpdatableMaterial";
 
 const shaderName = "marsMaterial";
 Effect.ShadersStore[`${shaderName}FragmentShader`] = fragmentShader;
 Effect.ShadersStore[`${shaderName}VertexShader`] = vertexShader;
 
-export class MarsMaterial extends UpdatebleMaterial {
+export class MarsMaterial extends UpdatableMaterial {
   constructor(scene: Scene) {
     super(shaderName, scene, {
       attributes: ["position", "uv"],
