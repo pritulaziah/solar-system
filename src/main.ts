@@ -6,8 +6,13 @@ export class App {
   engine: Engine;
   sceneManager: SceneManager;
 
-  static createEngine(canvas: HTMLCanvasElement): Engine {
-    const engine = new Engine(canvas, true, {
+  constructor(private canvas: HTMLCanvasElement) {
+    this.engine = this.createEngine();
+    this.sceneManager = new SceneManager(this.engine);
+  }
+
+  createEngine(): Engine {
+    const engine = new Engine(this.canvas, true, {
       preserveDrawingBuffer: true,
       stencil: true,
       useHighPrecisionMatrix: true,
@@ -17,13 +22,8 @@ export class App {
     return engine;
   }
 
-  constructor(canvas: HTMLCanvasElement) {
-    this.engine = App.createEngine(canvas);
-    this.sceneManager = new SceneManager(this.engine);
-  }
-
   async init() {
-    this.sceneManager.attachToCanvas(canvas);
+    this.sceneManager.attachToCanvas(this.canvas);
     let elapsedSeconds = 0;
 
     this.engine.runRenderLoop(() => {
