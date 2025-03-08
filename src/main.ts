@@ -49,7 +49,7 @@ class App {
     });
     this.cameraController = new CameraController(
       this.scene,
-      this.solarSystem.getPlanet(PlanetName.Earth)!
+      this.solarSystem.getPlanet(PlanetName.Earth)!.meshNode
     );
     this.cameraController.attachToCanvas(canvas);
     this.gui = new GUI({ width: 400 });
@@ -63,7 +63,7 @@ class App {
       .add(this.params, "targetPlanet", planetNames)
       .onChange((newPlanet: PlanetName) => {
         const planet = this.solarSystem.getPlanet(newPlanet);
-        this.cameraController.setTargetPlanet(planet);
+        this.cameraController.setTargetPlanet(planet.meshNode);
       });
   }
 

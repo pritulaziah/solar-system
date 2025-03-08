@@ -1,13 +1,11 @@
-import { ArcRotateCamera, Scene } from "@babylonjs/core";
-
-import type { CelestialBody } from "@objects/CelestialBody";
+import { ArcRotateCamera, Scene, TransformNode } from "@babylonjs/core";
 
 export class CameraController {
   private camera: ArcRotateCamera;
-  private targetPlanet: CelestialBody;
+  private target: TransformNode;
 
-  constructor(scene: Scene, initialPlanet: CelestialBody) {
-    this.targetPlanet = initialPlanet;
+  constructor(scene: Scene, initialTarget: TransformNode) {
+    this.target = initialTarget;
     this.camera = this.createOrbitCamera(scene);
   }
 
@@ -15,12 +13,12 @@ export class CameraController {
     this.camera.attachControl(canvas, true);
   }
 
-  setTargetPlanet(planet: CelestialBody) {
-    this.targetPlanet = planet;
+  setTargetPlanet(planet: TransformNode) {
+    this.target = planet;
   }
 
   update() {
-    this.camera.target.copyFrom(this.targetPlanet.meshNode.position);
+    this.camera.target.copyFrom(this.target.position);
   }
 
   private createOrbitCamera(scene: Scene): ArcRotateCamera {
@@ -29,7 +27,7 @@ export class CameraController {
       Math.PI / 4,
       Math.PI / 4,
       10,
-      this.targetPlanet.mesh.position,
+      this.target.position,
       scene
     );
     camera.wheelDeltaPercentage = 0.05;
