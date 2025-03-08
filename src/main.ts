@@ -3,14 +3,14 @@ import { GUI } from "lil-gui";
 import { Engine, Scene, Color4 } from "@babylonjs/core";
 import { GlobalUniforms } from "@core/GlobalUniforms";
 import { CameraController } from "@core/CameraController";
-import { SolarSystem } from "@objects/SolarSystem";
+import { CelestialManager } from "@core/CelestialManager";
 import { PlanetName } from "@objects/constants";
 
 class App {
   engine: Engine;
   scene: Scene;
   globalUniforms: GlobalUniforms;
-  solarSystem: SolarSystem;
+  celestialManager: CelestialManager;
   cameraController: CameraController;
   params = {
     backgroundColor: "#1d1f2a",
@@ -41,7 +41,7 @@ class App {
     this.engine = App.createEngine(canvas);
     this.scene = App.createScene(this.engine, this.params.backgroundColor);
     this.globalUniforms = GlobalUniforms.getInstance(this.engine);
-    this.solarSystem = new SolarSystem(this.scene, {
+    this.celestialManager = new CelestialManager(this.scene, {
       referenceDiameter: 1,
       referenceOrbitRadius: 500,
       referenceOrbitSpeed: 0.01,
@@ -49,7 +49,7 @@ class App {
     });
     this.cameraController = new CameraController(
       this.scene,
-      this.solarSystem.getPlanet(PlanetName.Earth)!.meshNode
+      this.celestialManager.getPlanet(PlanetName.Earth)!.meshNode
     );
     this.cameraController.attachToCanvas(canvas);
     this.gui = new GUI({ width: 400 });
@@ -62,7 +62,7 @@ class App {
     this.gui
       .add(this.params, "targetPlanet", planetNames)
       .onChange((newPlanet: PlanetName) => {
-        const planet = this.solarSystem.getPlanet(newPlanet);
+        const planet = this.celestialManager.getPlanet(newPlanet);
         this.cameraController.setTargetPlanet(planet.meshNode);
       });
   }
@@ -77,10 +77,9 @@ class App {
       // Global uniforms
       this.globalUniforms.update(
         elapsedSeconds,
-        this.solarSystem.sun.mesh.position
+        this.celestialManager.sun.mesh.position
       );
-      // Solar System
-      this.solarSystem.update(elapsedSeconds);
+      this.celestialManager.update(elapsedSeconds);
       // Camera
       this.cameraController.update();
       this.scene.render();

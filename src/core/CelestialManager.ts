@@ -1,8 +1,10 @@
 import { Scene } from "@babylonjs/core";
 import { Sun, SunParams } from "@materials/Sun";
+import { PlanetMaterialFactory } from "@materials/PlanetMaterialFactory";
+import { MoonMaterialFactory } from "@materials/MoonMaterialFactory";
 import { Planet } from "@objects/Planet";
 import { Moon } from "@objects/Moon";
-import { PlanetMaterialFactory } from "@materials/PlanetMaterialFactory";
+import { CelestialBodyParams } from "@objects/CelestialBody";
 import {
   PlanetName,
   PLANETS,
@@ -10,11 +12,9 @@ import {
   OrbitalBody,
   MoonBody,
   PlanetBody,
-} from "./constants";
-import { MoonMaterialFactory } from "@materials/MoonMaterialFactory";
-import { CelestialBodyParams } from "./CelestialBody";
+} from "@objects/constants";
 
-export type SolarSystemParams = {
+export type CelestialManagerParams = {
   referenceOrbitRadius: number;
   referenceDiameter: number;
   referenceOrbitSpeed: number;
@@ -30,7 +30,7 @@ type ScaleConfig = {
   scaleRotationSpeed: number;
 };
 
-export class SolarSystem {
+export class CelestialManager {
   sun: Sun;
   planets = new Map<PlanetName, Planet>();
   scaleConfig: ScaleConfig;
@@ -41,10 +41,10 @@ export class SolarSystem {
 
   constructor(
     private scene: Scene,
-    params: SolarSystemParams
+    params: CelestialManagerParams
   ) {
     this.scaleConfig = this.makeScaleConfig(params);
-    const sunParams = SolarSystem.getSunParams(params.referenceDiameter);
+    const sunParams = CelestialManager.getSunParams(params.referenceDiameter);
 
     this.createPlanets();
 
@@ -105,7 +105,7 @@ export class SolarSystem {
     referenceDiameter,
     referenceOrbitSpeed,
     referenceRotationSpeed,
-  }: SolarSystemParams): ScaleConfig {
+  }: CelestialManagerParams): ScaleConfig {
     const earth = PLANETS[PlanetName.Earth];
 
     return {
