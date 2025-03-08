@@ -23,8 +23,10 @@ export type OrbitalBody = {
   obliquity: number;
 };
 
+export type MoonBody = OrbitalBody & { name: string }; 
+
 export type PlanetBody = OrbitalBody & {
-  moons?: Array<OrbitalBody & { name: string }>;
+  moons?: MoonBody[];
 }
 
 export const PLANETS: { [key in PlanetName]: PlanetBody } = {

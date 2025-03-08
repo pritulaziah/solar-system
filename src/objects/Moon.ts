@@ -7,11 +7,11 @@ export type MoonParams = CelestialBodyParams;
 
 export class Moon extends CelestialBody {
   constructor(
-    scene: Scene,
-    name: string,
-    params: CelestialBodyParams,
-    hostPlanet: Planet,
-    material?: UpdatebleMaterial
+    protected scene: Scene,
+    protected name: string,
+    protected params: CelestialBodyParams,
+    protected hostPlanet: Planet,
+    protected material?: UpdatebleMaterial
   ) {
     super(scene, name, params, material, hostPlanet.meshNode);
   }
